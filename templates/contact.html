@@ -1,3 +1,5 @@
+{% load static %}
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -12,7 +14,7 @@
     <div id="carousel" class="h-full relative">
         <div class="carousel-slide absolute inset-0 opacity-100">
             <div class="absolute inset-0 bg-black/40 z-10"></div>
-            <img src="/static/images/contact_1.jpg" class="w-full h-full object-cover" alt="Support 24/7">
+            <img src="{% static 'images/contact_1.jpg' %}" class="w-full h-full object-cover" alt="Support 24/7">
             <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-white text-center px-6">
                 <h1 class="text-4xl md:text-6xl font-black mb-4">Assistance 24h/24h</h1>
                 <p class="text-xl text-cyan-400 font-bold uppercase">Nous sommes à vos côtés à chaque étape</p>
@@ -20,7 +22,7 @@
         </div>
         <div class="carousel-slide absolute inset-0 opacity-0">
             <div class="absolute inset-0 bg-black/40 z-10"></div>
-            <img src="/static/images/contact_2.jpg" class="w-full h-full object-cover" alt="Expertise">
+            <img src="{% static 'images/contact_2.jpg' %}" class="w-full h-full object-cover" alt="Expertise">
             <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-white text-center px-6">
                 <h1 class="text-4xl md:text-6xl font-black mb-4">Expertise & Conseils</h1>
                 <p class="text-xl text-cyan-400 font-bold uppercase">Le succès commence par une bonne stratégie</p>

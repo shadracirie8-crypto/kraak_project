@@ -1,3 +1,5 @@
+{% load static %}
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -63,7 +65,7 @@
             </div>
             <div class="lg:w-1/2 relative" data-aos="fade-left">
                 <div class="aspect-video bg-gray-100 rounded-[3rem] border-8 border-gray-50 shadow-2xl overflow-hidden">
-                    <img src="/static/images/anglais.jfif" alt="Formation Kraak" class="w-full h-full object-cover">
+                    <img src="{% static 'images/anglais.jfif' %}" alt="Formation Kraak" class="w-full h-full object-cover">
                 </div>
             </div>
         </div>
@@ -88,7 +90,7 @@
             </div>
             <div class="lg:w-1/2 relative" data-aos="fade-right">
                 <div class="aspect-video bg-gray-100 rounded-[3rem] border-8 border-gray-50 shadow-2xl overflow-hidden">
-                    <img src="/static/images/proj.jpg" alt="Gestion de Projet" class="w-full h-full object-cover">
+                    <img src="{% static 'images/proj.jpg' %}" alt="Gestion de Projet" class="w-full h-full object-cover">
                 </div>
             </div>
         </div>
@@ -109,7 +111,7 @@
             </div>
             <div class="lg:w-1/2 relative" data-aos="fade-left">
                 <div class="aspect-video bg-gray-100 rounded-[3rem] border-8 border-gray-50 shadow-2xl overflow-hidden">
-                    <img src="/static/images/cap.png" alt="Immigration" class="w-full h-full object-cover">
+                    <img src="{% static 'images/cap.png' %}" alt="Immigration" class="w-full h-full object-cover">
                 </div>
             </div>
         </div>
