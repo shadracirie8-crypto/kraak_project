@@ -1,0 +1,270 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRAAK Consulting - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Ajout de SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .bento-card { background: white; border-radius: 24px; transition: all 0.3s ease; border: 1px solid rgba(0,0,0,0.03); }
+        .bento-card:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05); }
+        .sidebar-link { transition: all 0.2s ease; border-radius: 12px; }
+        .sidebar-link.active { background: #f1f5f9; color: #1e3a5a; font-weight: 800; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        .status-badge { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        /* Personnalisation SweetAlert pour matcher ton thème */
+        .swal2-popup { border-radius: 24px !important; font-family: 'Plus Jakarta Sans', sans-serif !important; }
+        .swal2-styled.swal2-confirm { background-color: #1e3a5a !important; border-radius: 12px !important; }
+    </style>
+</head>
+<body class="antialiased text-slate-800">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- SIDEBAR -->
+        <aside class="w-72 bg-white border-r border-slate-100 flex flex-col p-6 h-full">
+            <div class="mb-12 px-2">
+                <img src="{% static 'images/logo.jpeg' %}" alt="Logo KRAAK" class="h-12 w-auto object-contain">
+            </div>
+
+            <div class="space-y-8 flex-1 overflow-y-auto">
+                <div>
+                    <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 px-2">Menu Principal</p>
+                    <nav class="space-y-1">
+                        <a href="{% url 'admin_dashboard' %}" class="sidebar-link active flex items-center gap-3 p-3 text-slate-600 hover:bg-slate-50">
+                            <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+                        </a>
+                        <a href="#messages" class="sidebar-link flex items-center gap-3 p-3 text-slate-600 hover:bg-slate-50">
+                            <i data-lucide="mail" class="w-5 h-5"></i> Messages
+                        </a>
+                        <a href="#programs" class="sidebar-link flex items-center gap-3 p-3 text-slate-600 hover:bg-slate-50">
+                            <i data-lucide="graduation-cap" class="w-5 h-5"></i> Programmes
+                        </a>
+                        <a href="#partners" class="sidebar-link flex items-center gap-3 p-3 text-slate-600 hover:bg-slate-50">
+                            <i data-lucide="users" class="w-5 h-5"></i> Partenaires
+                        </a>
+                    </nav>
+                </div>
+
+                <div>
+                    <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 px-2">Équipe Internes</p>
+                    <nav class="space-y-1">
+                        <a href="#" class="sidebar-link flex items-center gap-3 p-3 text-slate-600 hover:bg-slate-50">
+                            <span class="w-2 h-2 rounded-full bg-cyan-500"></span> Marketing
+                        </a>
+                        <a href="#" class="sidebar-link flex items-center gap-3 p-3 text-slate-600 hover:bg-slate-50">
+                            <span class="w-2 h-2 rounded-full bg-indigo-500"></span> Consultants
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-slate-50 space-y-1">
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" class="btn-logout" style="background:none; border:none; color:inherit; cursor:pointer; padding:0;">
+        Déconnexion
+    </button>
+</form>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 overflow-y-auto p-8 lg:p-12">
+            
+            <!-- TOP BAR -->
+            <header class="flex justify-between items-center mb-12">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-[#1e3a5a] tracking-tight">Vue d'ensemble</h1>
+                    <p class="text-slate-400 text-sm font-medium">Bon retour, Mr AKA 👋</p>
+                </div>
+                <div class="flex items-center gap-6">
+                    <button class="relative p-2 text-slate-400 hover:text-cyan-500 transition-colors">
+                        <i data-lucide="bell" class="w-6 h-6"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-100">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-bold text-[#1e3a5a]">Directeur Général</p>
+                            <p class="text-[10px] font-medium text-slate-400 uppercase tracking-tighter">Administrateur</p>
+                        </div>
+                        <img src="{% static 'images/Dg.jpeg' %}" class="w-12 h-12 rounded-2xl object-cover shadow-md border-2 border-white">
+                    </div>
+                </div>
+            </header>
+
+            <!-- STATS GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="bento-card p-8 flex flex-col justify-between min-h-[180px]">
+                    <div class="flex justify-between items-start">
+                        <div class="p-3 bg-cyan-50 text-cyan-600 rounded-2xl">
+                            <i data-lucide="inbox" class="w-6 h-6"></i>
+                        </div>
+                        <span class="status-badge text-green-500 bg-green-50 px-2 py-1 rounded-lg">+ {{ messages.count }}</span>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Messages reçus</p>
+                        <h2 class="text-4xl font-black text-[#1e3a5a] mt-1">{{ messages.count }}</h2>
+                    </div>
+                </div>
+
+                <div class="bento-card p-8 flex flex-col justify-between min-h-[180px]">
+                    <div class="flex justify-between items-start">
+                        <div class="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">
+                            <i data-lucide="layers" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Formations</p>
+                        <h2 class="text-4xl font-black text-[#1e3a5a] mt-1">{{ programs.count }}</h2>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-[#1e3a5a] to-cyan-700 p-8 rounded-[24px] text-white flex flex-col justify-between relative overflow-hidden shadow-xl shadow-cyan-900/20">
+                    <div class="relative z-10">
+                        <h3 class="text-xl font-bold mb-2">Audit Express</h3>
+                        <p class="text-cyan-100/70 text-xs">Vérifiez l'état de la plateforme.</p>
+                    </div>
+                    <button class="relative z-10 w-full py-3 bg-white text-[#1e3a5a] rounded-xl font-black text-sm uppercase tracking-widest hover:bg-cyan-50 transition-colors mt-6">
+                        Lancer l'audit
+                    </button>
+                </div>
+            </div>
+
+            <!-- MESSAGES SECTION -->
+            <div id="messages" class="bento-card overflow-hidden mb-12">
+                <div class="p-8 border-b border-slate-50 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-[#1e3a5a]">Messages récents</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50/50">
+                            <tr>
+                                <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Expéditeur</th>
+                                <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Sujet</th>
+                                <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</th>
+                                <th class="px-8 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            {% for msg in messages %}
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-8 py-5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-slate-100 text-[#1e3a5a] rounded-lg flex items-center justify-center font-bold text-xs uppercase">
+                                            {{ msg.name|slice:":1" }}
+                                        </div>
+                                        <span class="font-bold text-sm text-slate-700">{{ msg.name }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-5 text-sm text-slate-500">{{ msg.subject }}</td>
+                                <td class="px-8 py-5 text-sm text-slate-400">{{ msg.created_at|date:"d M Y" }}</td>
+                                <td class="px-8 py-5 text-right space-x-2">
+                                    <a href="{% url 'view_message' msg.pk %}" class="inline-block p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg">
+                                          <i data-lucide="eye" class="w-4 h-4"></i>
+                                    </a>
+                                    
+                                    <!-- Modification ici : Suppression avec confirmation SweetAlert -->
+                                    <button onclick="confirmDelete('{% url 'delete_message' msg.pk %}', 'ce message')" class="inline-block p-2 text-red-400 hover:bg-red-50 rounded-lg">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" class="p-8 text-center text-slate-400 italic">Aucun message pour le moment.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PROGRAMS SECTION -->
+            <div id="programs" class="bento-card overflow-hidden mb-12">
+                <div class="p-8 border-b border-slate-50 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-[#1e3a5a]">Gestion des Programmes</h3>
+                    <a href="{% url 'add_program' %}" class="bg-[#1e3a5a] text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-cyan-600 transition-all shadow-lg shadow-slate-200">
+                        + Ajouter
+                    </a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-8">
+                    {% for p in programs %}
+                    <div class="p-6 border border-slate-100 rounded-3xl hover:border-cyan-200 transition-colors group relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-slate-50 overflow-hidden">
+                                {% if p.image %}<img src="{{ p.image.url }}" class="w-full h-full object-cover">{% endif %}
+                            </div>
+                            <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="{% url 'edit_program' p.pk %}" class="p-2 bg-white shadow-sm border border-slate-100 rounded-lg text-cyan-600 hover:bg-cyan-50">
+                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                </a>
+                                <!-- Bouton supprimer pour programme -->
+                                <button onclick="confirmDelete('{% url 'delete_program' p.pk %}', 'ce programme')" class="p-2 bg-white shadow-sm border border-slate-100 rounded-lg text-red-400 hover:bg-red-50">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-slate-800 mb-1">{{ p.title }}</h4>
+                        <p class="text-xs text-slate-400 font-medium mb-4">{{ p.duration }}</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-black text-cyan-600">{{ p.price|default:"Sur devis" }} FCFA</span>
+                            <span class="status-badge {% if p.is_active %}text-green-500 bg-green-50{% else %}text-slate-400 bg-slate-100{% endif %} px-2 py-1 rounded-md">
+                                {% if p.is_active %}Actif{% else %}Brouillon{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Initialisation des icônes
+        lucide.createIcons();
+
+        // 1. Gestion des messages de succès/erreur (Django Messages)
+        {% if messages %}
+            {% for message in messages %}
+                Swal.fire({
+                    icon: '{% if message.tags == "error" %}error{% else %}success{% endif %}',
+                    title: '{% if message.tags == "error" %}Oups...{% else %}Succès !{% endif %}',
+                    text: "{{ message }}",
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                });
+            {% endfor %}
+        {% endif %}
+
+        // 2. Fonction de confirmation avant suppression
+        function confirmDelete(url, itemType) {
+            Swal.fire({
+                title: 'Êtes-vous sûr ?',
+                text: "Vous allez supprimer " + itemType + ". Cette action est irréversible !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#1e3a5a',
+                cancelButtonColor: '#cbd5e1',
+                confirmButtonText: 'Oui, supprimer !',
+                cancelButtonText: 'Annuler'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            })
+        }
+    </script>
+</body>
+</html>

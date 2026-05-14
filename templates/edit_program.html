@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRAAK Admin - {% if program %}Modifier{% else %}Nouveau{% endif %} Programme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e3a5a; }
+        .bento-card { background: white; border-radius: 28px; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+        .input-field { background: #f1f5f9; border: 2px solid transparent; transition: all 0.2s ease; }
+        .input-field:focus { background: white; border-color: #22d3ee; outline: none; box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.1); }
+    </style>
+</head>
+<body class="antialiased p-6 lg:p-12">
+
+    <div class="max-w-5xl mx-auto">
+        <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">
+            <div class="flex items-center gap-4">
+                <a href="{% url 'admin_dashboard' %}" class="p-3 bg-white rounded-2xl shadow-sm text-slate-400 hover:text-cyan-500 transition-all">
+                    <i data-lucide="chevron-left"></i>
+                </a>
+                <div>
+                    <h1 class="text-3xl font-black tracking-tight">{% if program %}Édition du programme{% else %}Nouveau programme{% endif %}</h1>
+                    <p class="text-slate-400 text-sm font-medium">Configurez les détails et les points clés de l'offre.</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                {% if program %}
+                <a href="{% url 'delete_program' program.pk %}" onclick="return confirm('Attention ! Supprimer ce programme ?')" class="px-6 py-3 text-red-500 font-bold text-xs uppercase tracking-widest hover:bg-red-50 rounded-xl transition-all">
+                    Supprimer
+                </a>
+                {% endif %}
+            </div>
+        </header>
+
+        <form method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {% csrf_token %}
+
+            <div class="lg:col-span-4 space-y-8">
+                <div class="bento-card p-6">
+                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-4 block">Visuel du programme</label>
+                    <div class="relative group rounded-2xl overflow-hidden aspect-square bg-slate-100 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center p-4">
+                        {% if program and program.image %}
+                            <img src="{{ program.image.url }}" class="absolute inset-0 w-full h-full object-cover">
+                        {% endif %}
+                        <div class="relative z-10 flex flex-col items-center {% if program and program.image %}opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 w-full h-full justify-center text-white{% endif %}">
+                            <i data-lucide="cloud-upload" class="w-10 h-10 mb-2"></i>
+                            <span class="text-xs font-bold">Cliquez pour uploader</span>
+                        </div>
+                        <input type="file" name="image" class="absolute inset-0 opacity-0 cursor-pointer z-20">
+                    </div>
+                </div>
+
+                <div class="bento-card p-6">
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span class="text-sm font-bold">Visible sur le site</span>
+                        <div class="relative">
+                            <input type="checkbox" name="is_active" {% if not program or program.is_active %}checked{% endif %} class="w-6 h-6 rounded-lg accent-cyan-500">
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8 space-y-8">
+                <div class="bento-card p-8">
+                    <div class="grid grid-cols-1 gap-6">
+                        <div>
+                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-2 block">Nom du programme</label>
+                            <input type="text" name="title" value="{{ program.title|default:'' }}" placeholder="Ex: Leadership & Management" class="w-full p-4 rounded-2xl input-field font-bold text-lg" required>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-2 block">Durée de formation</label>
+                                <input type="text" name="duration" value="{{ program.duration|default:'' }}" placeholder="Ex: 3 mois / 12 séances" class="w-full p-4 rounded-2xl input-field font-semibold" required>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-2 block">Prix (FCFA)</label>
+                                <input type="number" name="price" value="{{ program.price|default:'' }}" placeholder="Ex: 150000" class="w-full p-4 rounded-2xl input-field font-black text-cyan-600">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-2 block">Présentation détaillée</label>
+                            <textarea name="description" rows="5" class="w-full p-4 rounded-2xl input-field font-medium resize-none" placeholder="Décrivez le contenu et les objectifs du programme...">{{ program.description|default:'' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bento-card p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="font-black text-lg">Points forts</h3>
+                            <p class="text-xs text-slate-400 font-medium">Avantages inclus dans ce programme.</p>
+                        </div>
+                        <button type="button" onclick="addFeature()" class="flex items-center gap-2 px-4 py-2 bg-cyan-50 text-cyan-600 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-cyan-100 transition-all">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Ajouter
+                        </button>
+                    </div>
+
+                    <div id="features-list" class="space-y-3">
+                        {% if program %}
+                            {% for feature in program.features.all %}
+                            <div class="flex gap-3 group animate-in slide-in-from-left-2 duration-200">
+                                <input type="text" name="features[]" value="{{ feature.title }}" class="flex-1 p-4 rounded-xl bg-slate-50 border-none text-sm font-semibold focus:ring-2 focus:ring-cyan-500 outline-none">
+                                <button type="button" onclick="this.parentElement.remove()" class="p-4 text-slate-300 hover:text-red-500 transition-colors">
+                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" class="flex-1 py-5 bg-[#1e3a5a] text-white rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-xl shadow-[#1e3a5a]/20 hover:bg-cyan-600 hover:-translate-y-1 transition-all active:scale-95">
+                        Enregistrer le programme
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Initialisation des icônes
+        lucide.createIcons();
+
+        // Fonction pour ajouter une ligne de caractéristique
+        function addFeature() {
+            const list = document.getElementById('features-list');
+            const div = document.createElement('div');
+            div.className = "flex gap-3 animate-in slide-in-from-top-2 duration-300";
+            div.innerHTML = `
+                <input type="text" name="features[]" placeholder="Nouveau point fort..." class="flex-1 p-4 rounded-xl bg-slate-50 border-none text-sm font-semibold focus:ring-2 focus:ring-cyan-500 outline-none">
+                <button type="button" onclick="this.parentElement.remove()" class="p-4 text-slate-300 hover:text-red-500 transition-colors">
+                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                </button>
+            `;
+            list.appendChild(div);
+            lucide.createIcons(); // On relance Lucide pour la nouvelle icône de poubelle
+        }
+    </script>
+</body>
+</html>

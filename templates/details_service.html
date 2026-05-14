@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="py-20 bg-[#1e3a5a] text-white relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-1/4 h-full bg-cyan-500/10 -skew-x-12 translate-x-10"></div>
+    
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <a href="{% url 'services' %}" class="inline-flex items-center gap-2 text-cyan-400 font-bold text-sm mb-8 hover:gap-4 transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Retour aux services
+        </a>
+        
+        <div class="max-w-3xl">
+            <h1 class="text-5xl font-black mb-6" data-aos="fade-up">{{ service.title }}</h1>
+            <p class="text-xl text-gray-300 leading-relaxed" data-aos="fade-up" data-aos-delay="100">
+                {{ service.description }}
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-2 gap-12">
+            
+            {% for detail in service.details.all %}
+            <div class="p-10 rounded-[2.5rem] bg-gray-50 border border-gray-100 hover:shadow-2xl hover:shadow-gray-200/50 transition-all group" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <span class="inline-block mb-6 text-cyan-500 font-black text-4xl opacity-20 group-hover:opacity-100 transition-opacity">
+                    0{{ forloop.counter }}
+                </span>
+                
+                <h3 class="text-2xl font-black text-[#1e3a5a] mb-4">{{ detail.title }}</h3>
+                <div class="h-1 w-12 bg-cyan-500 mb-6 group-hover:w-24 transition-all duration-500"></div>
+                
+                <p class="text-gray-600 leading-relaxed">
+                    {{ detail.description|linebreaksbr }}
+                </p>
+            </div>
+            {% empty %}
+            <div class="col-span-2 text-center py-12">
+                <p class="text-gray-400">Plus d'informations seront bientôt disponibles pour ce service.</p>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+<section class="pb-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="bg-cyan-500 rounded-[3rem] p-12 text-center text-white shadow-xl shadow-cyan-900/20">
+            <h2 class="text-3xl font-black mb-6">Besoin d'un accompagnement personnalisé ?</h2>
+            <p class="text-cyan-50 mb-10 max-w-xl mx-auto">
+                Nos experts Kraak Consulting sont là pour répondre à vos questions et vous guider étape par étape.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="{% url 'contact' %}" class="bg-[#1e3a5a] text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-white hover:text-[#1e3a5a] transition-all">
+                    Démarrer maintenant
+                </a>
+                <a href="https://wa.me/2250102030405" class="bg-white text-cyan-600 px-10 py-5 rounded-2xl font-black uppercase tracking-widest hover:shadow-inner transition-all">
+                    WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

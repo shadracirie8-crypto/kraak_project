@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Espace Client | Kraak</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 font-sans antialiased text-slate-900">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-slate-200 hidden lg:flex flex-col">
+            <div class="p-6">
+                <span class="text-2xl font-bold text-cyan-600 tracking-tight">KRAAK</span>
+            </div>
+            
+            <nav class="flex-1 px-4 space-y-1">
+                <a href="#" class="flex items-center px-4 py-3 bg-cyan-50 text-cyan-700 rounded-xl font-medium">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
+                    Vue d'ensemble
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-xl transition">
+                    <i data-lucide="folder-kanban" class="w-5 h-5 mr-3"></i>
+                    Mes Projets
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-xl transition">
+                    <i data-lucide="credit-card" class="w-5 h-5 mr-3"></i>
+                    Facturation
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-xl transition">
+                    <i data-lucide="settings" class="w-5 h-5 mr-3"></i>
+                    Paramètres
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-100">
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="flex items-center w-full px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition font-medium">
+                        <i data-lucide="log-out" class="w-5 h-5 mr-3"></i>
+                        Déconnexion
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8">
+                <h1 class="text-lg font-semibold">Tableau de bord Client</h1>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-sm font-bold text-slate-900">{{ user.username }}</p>
+                        <p class="text-xs text-slate-500 uppercase">{{ user.role }}</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-cyan-100 border border-cyan-200 flex items-center justify-center text-cyan-700 font-bold">
+                        {{ user.username|first|upper }}
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Body -->
+            <div class="p-8">
+                <!-- Welcome Section -->
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900">Ravi de vous revoir, {{ user.username }} ! 👋</h2>
+                    <p class="text-slate-500 mt-1">Voici ce qui se passe sur votre compte aujourd'hui.</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4">
+                            <i data-lucide="clock" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Projets en cours</p>
+                        <h3 class="text-3xl font-bold mt-1">02</h3>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-4">
+                            <i data-lucide="check-circle" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Livrables terminés</p>
+                        <h3 class="text-3xl font-bold mt-1">14</h3>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 mb-4">
+                            <i data-lucide="message-square" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-sm font-medium text-slate-500 uppercase tracking-wider">Tickets support</p>
+                        <h3 class="text-3xl font-bold mt-1">0</h3>
+                    </div>
+                </div>
+
+                <!-- Recent Projects Table -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                        <h3 class="font-bold text-lg">Activités récentes</h3>
+                        <button class="text-cyan-600 text-sm font-bold hover:underline">Voir tout</button>
+                    </div>
+                    <div class="p-8 text-center">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-slate-50 rounded-full mb-4">
+                            <i data-lucide="inbox" class="w-8 h-8 text-slate-300"></i>
+                        </div>
+                        <p class="text-slate-500">Aucune activité récente pour le moment.</p>
+                        <a href="{% url 'home' %}" class="mt-4 inline-block px-6 py-2 bg-slate-900 text-white rounded-full text-sm font-bold">
+                            Explorer nos services
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
