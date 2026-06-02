@@ -1,11 +1,11 @@
 from django.db import models
-
+from cloudinary.models import CloudinaryField
 class Program(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField()
     duration = models.CharField(max_length=50)  # ex: 3 mois
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    image = models.ImageField(upload_to='programs/')
+    image = CloudinaryField('image')
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
