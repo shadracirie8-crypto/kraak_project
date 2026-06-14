@@ -5,7 +5,7 @@ from kraak_project import settings
 
 from django.conf.urls.static import static
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('kraak-secure-admin-2026/', admin.site.urls),
     path('programmes/', include('programs.urls')),
     path('services/', include('services.urls')),
     path('contact/', include('contact.urls')),
